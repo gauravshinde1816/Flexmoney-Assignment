@@ -107,7 +107,7 @@ router.post("/register", async (req, res) => {
 
   await user.save();
 
-  return res.json({ user: user });
+  return res.json({ user: user , SuccessMessage:`${email} has successfully registered` });
 });
 
 // @Route :  "/api/payments/:userid"

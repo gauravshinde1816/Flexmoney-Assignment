@@ -1,20 +1,43 @@
 import React from 'react'
 import { useState } from 'react'
-import {registerForClass} from "../actions/main"
+import { axiosInstance } from "../actions/main"
+import Alerts from './Alerts'
 
 const Form = () => {
 
     const [formData, setFormData] = useState({})
+    const [alert, setAlert] = useState({ msg: " ", status: "" })
+
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
+    const registerForClass = async () => {
+        try {
+            const res = await axiosInstance.post("register", formData)
+            console.log(res.data)
+            setAlert({ status: "success", msg: res.data.SuccessMessage })
+        } catch (error) {
+            console.log(error.response.data.msg)
+            setAlert({ status: "danger", msg: error.response.data.msg })
+        }
+    }
+
     const onSubmit = (e) => {
         e.preventDefault()
-        registerForClass(formData)
+        registerForClass()
+
     }
+    if (alert.msg !== "" && alert.status !== "") {
+        setTimeout(() => {
+            setAlert({ msg: "", status: "" })
+        }, 5000)
+    }
+
     return (
-        <div><form onSubmit={onSubmit}>
+        <div>
+            {alert && <Alerts msg={alert.msg} status={alert.status} />}
+            <form onSubmit={onSubmit}>
             <div className="form-row">
                 <div className="form-group col-md-6">
                     <label htmlFor="email">Email</label>
