@@ -1,14 +1,15 @@
-FROM node:11-alpine
+FROM ubuntu
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-
-WORKDIR /home/node/app
+RUN  apt update && \
+    apt install -y nodejs && \
+    apt install -y npm
+  
+WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm install
-
-COPY --chown=node:node . .
+COPY . ./
 
 EXPOSE 5000
 
